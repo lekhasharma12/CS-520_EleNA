@@ -44,3 +44,47 @@ def dijkstras(graph, source_node, dest_node):
         "path": [int(node) for node in paths[dest_node].strip().split(" ")]
     }
 
+
+def astar(graph, source_node, dest_node):
+    elevations = {node: math.inf for node in graph.nodes}
+    paths = {node: "" for node in graph.nodes}
+
+    elevations[source_node] = 0
+    paths[source_node] = str(source_node)
+
+    visited = set()
+
+    queue = PriorityQueue()
+    queue.put((elevations[source_node], source_node))
+
+    while not queue.empty():
+        (elevation, node) = queue.get()
+
+        if node == dest_node:
+            break
+
+        visited.add(node)
+
+        for neighbor in graph.neighbors(node):
+            edge_data = graph.edges[node, neighbor, 0]
+            neighbor_elevation = graph.nodes[neighbor]['elevation']
+            node_elevation = graph.nodes[node]['elevation']
+            elevation_diff = node_elevation - neighbor_elevation
+            neighbor_cost = edge_data['length']
+
+            if neighbor not in visited:
+                curr_elevation = elevations[neighbor]
+                new_elevation = elevation + elevation_diff
+                f_cost = new_elevation + neighbor_cost
+
+                if f_cost < curr_elevation:
+                    elevations[neighbor] = f_cost
+                    paths[neighbor] = paths[node] + " " + str(neighbor)
+                    queue.put((f_cost, neighbor))
+
+    return {
+        "elevation": elevations[dest_node],
+        "path": [int(node) for node in paths[dest_node].strip().split(" ")]
+    }
+
+
