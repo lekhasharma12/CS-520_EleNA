@@ -44,17 +44,13 @@ def get_elevation_data(graph):
     return elevation_data
 
 
-def get_elevation_graph(graph, elevation_data):
+def add_elevation_data(graph, elevation_data):
     elevation_dict = {}
     for node, elevation in zip(graph.nodes, elevation_data):
         elevation_dict.update({node: elevation})
 
-    # elevation_diff_dict = {}
-    # for edge in graph.edges:
-    #     diff = elevation_dict[edge]
-    #     elevation_diff_dict.update({})
-
     nx.set_node_attributes(graph, elevation_dict)
     return graph
+
 
 
