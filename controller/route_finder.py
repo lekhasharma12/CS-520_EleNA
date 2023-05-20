@@ -3,21 +3,21 @@ from queue import PriorityQueue
 
 
 def dijkstras(graph, source_node, dest_node):
-    elevations = {node: math.inf for node in graph.nodes}
-    distances = {node: 0 for node in graph.nodes}
+    elevations = {node: 0 for node in graph.nodes}
+    distances = {node: math.inf for node in graph.nodes}
     paths = {node: "" for node in graph.nodes}
 
-    elevations[source_node] = 0
+    distances[source_node] = 0
     paths[source_node] = str(source_node)
 
     visited = set()
 
     queue = PriorityQueue()
-    queue.put((elevations[source_node], source_node))
+    queue.put((distances[source_node], source_node))
 
     while not queue.empty():
-        (elevation, node) = queue.get()
-        distance = distances[node]
+        (distance, node) = queue.get()
+        elevation = elevations[node]
 
         # marking current node as visited
         visited.add(node)
@@ -26,20 +26,21 @@ def dijkstras(graph, source_node, dest_node):
         for neighbor in graph.neighbors(node):
 
             edge_data = graph.edges[node, neighbor, 0]
+            neighbor_distance = edge_data['length']
+
             neighbor_elevation = graph.nodes[neighbor]['elevation']
             node_elevation = graph.nodes[node]['elevation']
             elevation_diff = node_elevation - neighbor_elevation
-            neighbor_distance = edge_data['length']
 
             if neighbor not in visited:
-                curr_elevation = elevations[neighbor]
-                new_elevation = elevation + elevation_diff
+                curr_distance = distances[neighbor]
+                new_distance = distance + neighbor_distance
 
-                if new_elevation < curr_elevation:
-                    elevations[neighbor] = new_elevation
-                    distances[neighbor] = distance + neighbor_distance
+                if new_distance < curr_distance:
+                    distances[neighbor] = new_distance
+                    elevations[neighbor] = elevation + elevation_diff
                     paths[neighbor] = paths[node] + " " + str(neighbor)
-                    queue.put((new_elevation, neighbor))
+                    queue.put((new_distance, neighbor))
 
     # return total elevation and path taken.
     return {
