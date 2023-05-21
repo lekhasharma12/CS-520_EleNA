@@ -1,9 +1,13 @@
 import math
 from queue import PriorityQueue
+from utils.utils import distance_till_dest, get_elevation_for_node
+
+
 def dijkstras(graph, source_node, dest_node):
     elevations = {node: 0 for node in graph.nodes}
     distances = {node: math.inf for node in graph.nodes}
     paths = {node: "" for node in graph.nodes}
+    node_count = 0
 
     distances[source_node] = 0
     paths[source_node] = str(source_node)
@@ -19,7 +23,7 @@ def dijkstras(graph, source_node, dest_node):
 
         # marking current node as visited
         visited.add(node)
-
+        node_count += 1
         # check all neighbors of current node
         for neighbor in graph.neighbors(node):
 
@@ -40,6 +44,7 @@ def dijkstras(graph, source_node, dest_node):
                     paths[neighbor] = paths[node] + " " + str(neighbor)
                     queue.put((new_distance, neighbor))
 
+    print("D node count ", node_count)
     # return total elevation and path taken.
     return {
         "elevation": elevations[dest_node],
@@ -114,44 +119,62 @@ def dijkstras(graph, source_node, dest_node):
 #     }
 
 def astar(graph, source_node, dest_node):
-    elevations = {node: math.inf for node in graph.nodes}
+    elevations = {node: 0 for node in graph.nodes}
+    distances = {node: math.inf for node in graph.nodes}
     paths = {node: "" for node in graph.nodes}
+    node_count = 0
 
-    elevations[source_node] = 0
+    f_distances = {node: math.inf for node in graph.nodes}
+
+    distances[source_node] = 0
+    f_distances[source_node] = f_distances[source_node] + distance_till_dest(graph, source_node, dest_node)
     paths[source_node] = str(source_node)
 
     visited = set()
 
     queue = PriorityQueue()
-    queue.put((elevations[source_node], source_node))
+    queue.put((f_distances[source_node], source_node))
 
     while not queue.empty():
-        (elevation, node) = queue.get()
+        (f_distance, node) = queue.get()
 
         if node == dest_node:
             break
 
-        visited.add(node)
+        elevation = elevations[node]
+        distance = distances[node]
 
+        # marking current node as visited
+        visited.add(node)
+        node_count += 1
+
+        # check all neighbors of current node
         for neighbor in graph.neighbors(node):
+
             edge_data = graph.edges[node, neighbor, 0]
+            neighbor_distance = edge_data['length']
+
             neighbor_elevation = graph.nodes[neighbor]['elevation']
             node_elevation = graph.nodes[node]['elevation']
             elevation_diff = node_elevation - neighbor_elevation
-            neighbor_cost = edge_data['length']
 
             if neighbor not in visited:
-                curr_elevation = elevations[neighbor]
-                new_elevation = elevation + elevation_diff
-                f_cost = new_elevation + neighbor_cost
+                curr_distance = distances[neighbor]
+                new_distance = distance + neighbor_distance
 
-                if f_cost < curr_elevation:
-                    elevations[neighbor] = f_cost
+                if new_distance < curr_distance:
+                    distances[neighbor] = new_distance
+                    f_distances[neighbor] = distances[neighbor] + distance_till_dest(graph, neighbor, dest_node)
+                    elevations[neighbor] = elevation + elevation_diff
                     paths[neighbor] = paths[node] + " " + str(neighbor)
-                    queue.put((f_cost, neighbor))
+                    queue.put((f_distances[neighbor], neighbor))
 
+    print("A node count ", node_count)
+    # return total elevation and path taken.
     return {
         "elevation": elevations[dest_node],
+        "distance": distances[dest_node],
+        # "path": [get_coordinates_from_node(graph, int(node)) for node in paths[dest_node].strip().split(" ")]
         "path": [int(node) for node in paths[dest_node].strip().split(" ")]
     }
 

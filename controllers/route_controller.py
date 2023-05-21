@@ -1,6 +1,7 @@
 import osmnx as ox
 from models.route import Route
 from utils.utils import validate_for_errors
+import time
 
 from services.route_finder import dijkstras, astar
 
@@ -8,17 +9,17 @@ from services.route_finder import dijkstras, astar
 def index():
     return "Hello, this is EleNA"
 
+
 def shortest_path(source, destination, elevation_type, percent_increase, mode, city, state):
 
-    source_coordinates = ox.geocode(source)
-    destination_coordinates = ox.geocode(destination)
-
-    error, error_msg = validate_for_errors(elevation_type, percent_increase, mode)
+    st = time.time()
+    error, error_msg = validate_for_errors(source, destination, elevation_type, percent_increase, mode)
 
     if error:
+        print(error_msg)
         return error_msg
     else:
-        route = Route(source_coordinates, destination_coordinates, elevation_type, percent_increase, mode, city, state)
+        route = Route(source, destination, elevation_type, percent_increase, mode, city, state)
 
         # route1 = nx.shortest_path(route.graph, route.source_node, route.destination_node, weight='length')
         result_dijkstras = dijkstras(route.graph, route.source_node, route.destination_node)
@@ -37,4 +38,6 @@ def shortest_path(source, destination, elevation_type, percent_increase, mode, c
         route_map = ox.plot_route_folium(route.graph, result_astar['path'], route_map=route_map, color='#ff0000', opacity=0.5)
         route_map.save('route.html')
 
+        et = time.time()
+        print("Time elapsed ", et-st)
         return result['elevation'], result['distance'], result['distance']

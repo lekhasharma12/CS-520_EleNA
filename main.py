@@ -1,12 +1,12 @@
 from flask import Flask
 from flask_cors import CORS
 from routes.blueprint import blueprint
+from utils.utils import make_graph
 from controllers.route_controller import shortest_path
 
 elena = Flask(__name__)
 CORS(elena)
 elena.register_blueprint(blueprint, url_prefix='/elena')
-
 
 
 # Press the green button in the gutter to run the script.

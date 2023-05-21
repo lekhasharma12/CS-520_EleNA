@@ -4,6 +4,7 @@ import requests
 import json
 import os
 import pickle
+import math
 
 
 def get_elevation_data(graph):
@@ -78,7 +79,15 @@ def get_place_mode_graph(city, state, mode):
 # method to validate the type of elevation user wants,
 # the percent increase for shortest path is within 100% and
 # the mode selected by user is either waling or biking
-def validate_for_errors(elevation_type, percent_increase, mode):
+def validate_for_errors(source, destination, elevation_type, percent_increase, mode):
+    source_coordinates = ox.geocode(source)
+    destination_coordinates = ox.geocode(destination)
+    if len(source_coordinates) != 2:
+        return True, "Source coordinates are not correct."
+    if len(destination_coordinates) != 2:
+        return True, "Destination coordinates are not correct."
+    if math.dist(source_coordinates, destination_coordinates) > 10000:
+        return True, "Source and destination are further than 10km. Please enter places within 10km radius."
     if elevation_type not in ['max', 'min']:
         return True, "Elevation Type is incorrect. Please select either minimum or maximum elevation"
     if percent_increase > 100:
@@ -95,3 +104,26 @@ def get_coordinates_from_node(graph, node):
 
 def get_node_from_coordinates(graph, coordinates):
     return ox.nearest_nodes(graph, coordinates[1], coordinates[0])
+
+
+def distance_till_dest(graph, node, dest):
+    node_coordinates = get_coordinates_from_node(graph, node)
+    dest_coordinates = get_coordinates_from_node(graph, dest)
+    return math.dist(node_coordinates, dest_coordinates)
+
+
+def make_graph(source, mode):
+    path = f"./graphs/{source}_{mode}.pickle"
+    source_coordinates = ox.geocode(source)
+    if os.path.isfile(path):
+        print("Graph already saved, loading")
+        graph = pickle.load(open(path, 'rb'))
+    else:
+        print("Graph not saved, fetching from osmnx")
+        graph = ox.graph_from_point(source_coordinates, dist=15000, dist_type='bbox', network_type='walk')
+        graph = add_elevation_data(graph)
+        pickle.dump(graph, open(path, 'wb'))
+    print("make_graph - Done")
+    return graph
+
+
