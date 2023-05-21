@@ -1,7 +1,5 @@
 import math
 from queue import PriorityQueue
-
-
 def dijkstras(graph, source_node, dest_node):
     elevations = {node: 0 for node in graph.nodes}
     distances = {node: math.inf for node in graph.nodes}
@@ -46,6 +44,7 @@ def dijkstras(graph, source_node, dest_node):
     return {
         "elevation": elevations[dest_node],
         "distance": distances[dest_node],
+        # "path": [get_coordinates_from_node(graph, int(node)) for node in paths[dest_node].strip().split(" ")]
         "path": [int(node) for node in paths[dest_node].strip().split(" ")]
     }
 
@@ -155,5 +154,4 @@ def astar(graph, source_node, dest_node):
         "elevation": elevations[dest_node],
         "path": [int(node) for node in paths[dest_node].strip().split(" ")]
     }
-
 
