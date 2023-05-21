@@ -1,6 +1,6 @@
 import math
 from queue import PriorityQueue
-from utils.utils import distance_till_dest, get_elevation_for_node
+from utils.utils import distance_till_dest
 
 
 def dijkstras(graph, source_node, dest_node):
