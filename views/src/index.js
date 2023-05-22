@@ -1,13 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
-import MyComponents from './Map';
-import Form from './Form';
 import reportWebVitals from './reportWebVitals';
-import SignInSide from './SignInSide';
-// import Autocomplete from './AutoComplete';
-import GoogleMaps from './AutoComplete';
 import Test from './Test';
 
 const GOOGLE_MAPS_API_KEY = 'AIzaSyB4k2WLIJibVJ8ZmDTHtalCRVcDbfkPepM';
@@ -36,14 +30,7 @@ if (typeof window !== 'undefined') {
 }
 root.render(
   <React.StrictMode>
-    {/* <Form /> */}
-    {/* <SignInSide/> */}
     <Test/>
-    {/* <Auto/> */}
-    {/* <GoogleMaps/> */}
-    {/* <Autocomplete 
-      countries={[ "Iran", "Iraq","iutr", "itrhg","ioug","iogfv", "USA"]}
-    /> */}
   </React.StrictMode>
 );
 

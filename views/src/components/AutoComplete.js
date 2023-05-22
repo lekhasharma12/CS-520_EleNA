@@ -23,7 +23,7 @@ function loadScript(src, position, id) {
 
 const autocompleteService = { current: null };
 
-export default function GoogleMaps(props) {
+export default function AutoComplete(props) {
     const [value, setValue] = React.useState(null);
     const [inputValue, setInputValue] = React.useState('');
     const [options, setOptions] = React.useState([]);

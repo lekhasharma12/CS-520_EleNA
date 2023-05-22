@@ -29,7 +29,7 @@ const onLoad = polyline => {
     console.log('polyline: ', polyline)
 };
 
-class MyComponents extends Component {
+class Map extends Component {
     constructor(props) {
         super(props);
 
@@ -75,7 +75,7 @@ class MyComponents extends Component {
     }
 
     render() {
-
+        console.log("this.state.path", this.state.path)
         return (
             <div>
                 {this.state.path.length == 0 ?
@@ -103,4 +103,4 @@ class MyComponents extends Component {
     }
 }
 
-export default MyComponents
+export default Map

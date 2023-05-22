@@ -7,8 +7,8 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Slider } from '@mui/material';
-import GoogleMaps from './AutoComplete';
-import MyComponents from './Map';
+import AutoComplete from './components/AutoComplete';
+import Map from './components/Map';
 import { BarLoader } from 'react-spinners';
 import {DirectionsWalk, DirectionsBike, Brightness1Outlined, LocationOn} from '@mui/icons-material';
 
@@ -29,6 +29,8 @@ class Test extends Component {
             results: '',
             path: [],
             loading: false,
+            isError: false,
+            fetched: false
         }
         this.handleSubmit = this.handleSubmit.bind(this);
 
@@ -39,8 +41,6 @@ class Test extends Component {
     }
 
     async handleSubmit(event) {
-
-
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
 
@@ -79,24 +79,30 @@ class Test extends Component {
         };
 
         this.setState({ loading: true })
-
+        this.setState({fetch: true})
 
         fetch("http://127.0.0.1:5000/elena/shortestpath", requestOptions)
             .then(response => response.json())
             .then(result => {
                 this.setState({ results: result })
 
-                const convertedCoordinates = result.path.map(([lng, lat]) => ({
-                    lat: lat,
-                    lng: lng
-                }));
-                this.setState({ path: convertedCoordinates })
+                if (typeof result != 'string') {
+
+                    const convertedCoordinates = result.path.map(([lng, lat]) => ({
+                        lat: lat,
+                        lng: lng
+                    }));
+                    this.setState({ path: convertedCoordinates })
+                } else {
+                    this.setState({isError: true})
+                }
                 this.setState({ loading: false })
+                this.setState({fetched: true})
 
             })
             .catch(error => {
                 console.log('error', error)
-                alert(`Some Error ocurred! Please try again later`)
+                // alert(error)
                 this.setState({ loading: false })
             });
     }
@@ -154,12 +160,12 @@ class Test extends Component {
                                         <Brightness1Outlined sx={{ color: '#1976d2', width:18, height:18, marginTop: '25px', marginLeft: '2px'}}/>
                                     </Grid>
                                     <Grid item xs={11}>
-                                        <GoogleMaps
-                                        id="source"
-                                        label="Source"
-                                        name="source"
-                                        onData={(data, id) => this.handleDataFromChild(data, id)}
-                                    />
+                                        <AutoComplete
+                                            id="source"
+                                            label="Source"
+                                            name="source"
+                                            onData={(data, id) => this.handleDataFromChild(data, id)}
+                                        />
                                     </Grid>
                                 </Grid>
                                 <Grid
@@ -172,12 +178,12 @@ class Test extends Component {
                                         <LocationOn sx={{ color: '#1976d2', width:25, height:35, marginTop: '20px', marginRight: '-2px'}}/>
                                     </Grid>
                                     <Grid item xs={11}>
-                                        <GoogleMaps
-                                        id="destination"
-                                        label="Destination"
-                                        name="destination"
-                                        onData={(data, id) => this.handleDataFromChild(data, id)}
-                                    />
+                                        <AutoComplete
+                                            id="destination"
+                                            label="Destination"
+                                            name="destination"
+                                            onData={(data, id) => this.handleDataFromChild(data, id)}
+                                        />
                                     </Grid>
 
                                 </Grid>
@@ -297,7 +303,16 @@ class Test extends Component {
                                             <BarLoader color='#1976d2' />
                                         </Grid>
                                         :
-                                        this.state.results != '' &&
+                                        this.state.isError ?
+                                        <Grid>
+                                            <Box sx={{ border: 2, borderColor: '#ff0000' }}>
+                                                <Typography>
+                                                    {this.state.results}
+                                                </Typography>
+                                            </Box>
+                                        </Grid>
+                                        :
+                                        this.state.fetched &&
                                         <Grid height={100}>
                                             <Box sx={{ border: 2, borderColor: '#1976d2' }}>
                                                 <Typography sx={{ marginLeft: 10, fontSize: 18 }}>
@@ -312,13 +327,12 @@ class Test extends Component {
                                             </Box>
                                         </Grid>
                                     }
-
                                 </Grid>
                             </Grid>
                         </Grid>
                     </Grid>
                     <Grid item xs={7}>
-                        <MyComponents
+                        <Map
                         path={this.state.path}
                     />
                     </Grid>
