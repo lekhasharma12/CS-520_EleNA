@@ -27,7 +27,6 @@ function loadScript(src, position, id) {
 const autocompleteService = { current: null };
 
 export default function GoogleMaps(props) {
-    console.log("🚀 ~ file: AutoComplete.js:30 ~ GoogleMaps ~ props:", props)
     const [value, setValue] = React.useState(null);
     const [inputValue, setInputValue] = React.useState('');
     const [options, setOptions] = React.useState([]);
@@ -44,6 +43,10 @@ export default function GoogleMaps(props) {
         }
 
         loaded.current = true;
+    }
+
+    function sendDataToParent(value, id) {
+        props.onData(value, id)
     }
 
     const fetch = React.useMemo(
@@ -108,12 +111,11 @@ export default function GoogleMaps(props) {
             value={value}
             //   noOptionsText="No locations"
             onChange={(event, newValue) => {
-                console.log("new value is", newValue)
                 setOptions(newValue ? [newValue, ...options] : options);
                 setValue(newValue);
+                sendDataToParent(newValue, props.id)
             }}
             onInputChange={(event, newInputValue) => {
-                console.log("newInputValue is", newInputValue)
                 setInputValue(newInputValue);
             }}
             renderInput={(params) => (
@@ -133,7 +135,6 @@ export default function GoogleMaps(props) {
                 />
             )}
             renderOption={(props, option) => {
-                console.log("props", props)
                 const matches =
                     option.structured_formatting.main_text_matched_substrings || [];
 

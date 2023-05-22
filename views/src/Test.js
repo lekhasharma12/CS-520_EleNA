@@ -44,8 +44,11 @@ class Test extends Component {
 
     }
 
+    handleDataFromChild(data, id) {
+        this.setState({[id]: data})
+    }
+
     async handleSubmit(event) {
-        console.log("🚀 ~ file: SignInSide.js:60 ~ SignInSide ~ handleSubmit ~ event:", event)
 
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
@@ -65,8 +68,8 @@ class Test extends Component {
         }
 
         var raw = JSON.stringify({
-            "source": "Puffers Pond, Amherst",
-            "destination": "UMass Amherst",
+            "source": this.state.source,
+            "destination": this.state.destination,
             "mode": mode,
             "elevation_type": elevation,
             "percent_increase": this.state.percent.toString()
@@ -82,9 +85,7 @@ class Test extends Component {
         fetch("http://127.0.0.1:5000/elena/shortestpath", requestOptions)
             .then(response => response.json())
             .then(result => {
-                console.log("🚀 ~ file: Test.js:85 ~ Test ~ handleSubmit ~ result:", result)
                 this.setState({results: result})
-                console.log("results", this.state.results)
             })
             .catch(error => console.log('error', error));
     }
@@ -144,6 +145,7 @@ class Test extends Component {
                                         id="source"
                                         label="Source"
                                         name="source"
+                                        onData={(data, id) => this.handleDataFromChild(data, id)}
                                     />
 
                                 </Grid>
@@ -164,6 +166,7 @@ class Test extends Component {
                                         id="destination"
                                         label="Destination"
                                         name="destination"
+                                        onData={(data, id) => this.handleDataFromChild(data, id)}
                                     />
                                 </Grid>
                                 <Grid sx={{
@@ -260,7 +263,6 @@ class Test extends Component {
                                         aria-label="Small"
                                         valueLabelDisplay="auto"
                                         onChange={(event) => {
-                                            console.log("value", event.target.value)
                                             this.setState({ percent: event.target.value })
                                         }}
                                     />
@@ -280,12 +282,7 @@ class Test extends Component {
                                         size='large'
                                         sx={{ mt: 5, mb: 2, borderRadius: 0, height: 60 }}
                                         onClick={async (event) => {
-                                            console.log("event ", event)
                                             await this.handleSubmit(event)
-                                        }}
-                                        onSubmitCapture={async (event) => {
-                                            console.log("event ", event)
-                                            // await this.handleSubmit(event)
                                         }}
                                     >
                                         Find Path
