@@ -3,6 +3,7 @@ import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Slider } from '@mui/material';
@@ -103,7 +104,14 @@ class Test extends Component {
     render() {
         return (
             <ThemeProvider theme={defaultTheme}>
-                <Grid container component="main" sx={{ height: '1vh', display: 'flex'}}>
+                <Grid
+                      container
+                      component = "main"
+                      // spacing={0}
+                      direction="row"
+                      // alignItems="center"
+                      justifyContent="center"
+                      sx={{ height: '1vh' }}>
                     <CssBaseline />
                     <Grid
                         // md={5}
@@ -122,7 +130,8 @@ class Test extends Component {
                             <img
                                 src={require('./assets/logo.png')}
                                 style={{
-                                    width: 135, height: 75, alignSelf: 'center', marginLeft: "28%"
+                                    width: 135, height: 75, alignSelf: 'center',
+                                    marginTop: '10px', marginLeft: '28%'
                                 }}
                             />
                             <Grid
@@ -192,7 +201,7 @@ class Test extends Component {
                                             type="button"
                                             fullWidth
                                             variant={this.state.elevation === 0 ? 'contained' : 'outlined'}
-                                            sx={{ borderRadius: 0, height: 40 }}
+                                            sx={{ borderRadius: '5px 0px 0px 5px', height: 40}}
                                             size='small'
                                             onClick={() => {
                                                 this.setState({ elevation: 0 })
@@ -204,7 +213,7 @@ class Test extends Component {
                                             type="button"
                                             fullWidth
                                             variant={this.state.elevation === 1 ? 'contained' : 'outlined'}
-                                            sx={{ borderRadius: 0, height: 40 }}
+                                            sx={{ borderRadius: '0px 5px 5px 0px', height: 40 }}
                                             size='small'
                                             onClick={() => {
                                                 this.setState({ elevation: 1 })
@@ -222,7 +231,7 @@ class Test extends Component {
                                             type="button"
                                             fullWidth
                                             variant={this.state.mode === 0 ? 'contained' : 'outlined'}
-                                            sx={{ mt: 3, mb: 2, borderRadius: 0, height: 40 }}
+                                            sx={{ mt: 3, mb: 2, borderRadius: '5px 0px 0px 5px', height: 40 }}
                                             size='small'
                                             onClick={() => {
                                                 this.setState({ mode: 0 })
@@ -234,7 +243,7 @@ class Test extends Component {
                                             type="button"
                                             fullWidth
                                             variant={this.state.mode === 1 ? 'contained' : 'outlined'}
-                                            sx={{ mt: 3, mb: 2, borderRadius: 0, height: 40}}
+                                            sx={{ mt: 3, mb: 2, borderRadius: '0px 5px 5px 0px', height: 40}}
                                             size='small'
                                             onClick={() => {
                                                 this.setState({ mode: 1 })
@@ -264,7 +273,7 @@ class Test extends Component {
                                     />
                                     <Typography
                                         sx={{
-                                            ml: 25
+                                            ml: '48%'
                                         }}
                                     >
                                         {this.state.percent}%
@@ -274,7 +283,7 @@ class Test extends Component {
                                         fullWidth
                                         variant="contained"
                                         size='large'
-                                        sx={{ mt: 5, mb: 2, borderRadius: 0, height: 40}}
+                                        sx={{ mt: 5, mb: 2, borderRadius: 1, height: 40}}
                                         onClick={async (event) => {
                                             await this.handleSubmit(event)
                                         }}
@@ -284,21 +293,23 @@ class Test extends Component {
                                 </Grid>
                                 <Grid>
                                     {this.state.loading === true ?
-                                        <Grid sx={{ ml: 20 }}>
-                                            <BarLoader color="#1976d2" />
+                                        <Grid sx={{ ml: '40%' }}>
+                                            <BarLoader color='#1976d2' />
                                         </Grid>
                                         :
                                         this.state.results != '' &&
                                         <Grid height={100}>
-                                            <Typography sx={{ marginLeft: 10, fontSize: 20 }}>
-                                                Estimated Time: {(this.state.results.time).toFixed(2)} hour(s)
-                                            </Typography>
-                                            <Typography sx={{ marginLeft: 10, fontSize: 20 }}>
-                                                Total Distance: {(this.state.results.distance).toFixed(2)} km
-                                            </Typography>
-                                            <Typography sx={{ marginLeft: 10, fontSize: 20 }}>
-                                                Elevation Variance : {this.state.results.elevation[1] -this.state.results.elevation[0]} m
-                                            </Typography>
+                                            <Box sx={{ border: 2, borderColor: '#1976d2' }}>
+                                                <Typography sx={{ marginLeft: 10, fontSize: 18 }}>
+                                                    Estimated Time: {(this.state.results.time).toFixed(2)} hour(s)
+                                                </Typography>
+                                                <Typography sx={{ marginLeft: 10, fontSize: 18 }}>
+                                                    Total Distance: {(this.state.results.distance).toFixed(2)} km
+                                                </Typography>
+                                                <Typography sx={{ marginLeft: 10, fontSize: 18 }}>
+                                                    Elevation Variance : {this.state.results.elevation[1] -this.state.results.elevation[0]} m
+                                                </Typography>
+                                            </Box>
                                         </Grid>
                                     }
 

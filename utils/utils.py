@@ -113,12 +113,11 @@ def get_place_mode_graph(city, state, mode):
         graph = add_elevation_data(graph)
         pickle.dump(graph, open(path, 'wb'))
 
-    print('get_graph_for_place - Done')
+    print('get_place_mode_graph - Done')
     return graph
 
 
-# method to make graph with 10 km radius from source and mode of transport
-def make_graph(source, mode):
+def get_radius_mode_graph(source, mode):
     path = f"./graphs/{source}_{mode}.pickle"
     source_coordinates = ox.geocode(source)
 
@@ -133,7 +132,18 @@ def make_graph(source, mode):
         graph = ox.graph_from_point(source_coordinates, dist=10000, dist_type='bbox', network_type='walk')
         graph = add_elevation_data(graph)
         pickle.dump(graph, open(path, 'wb'))
-    print("make_graph - Done")
+    print("get_radius_mode_graph - Done")
+
+# method to make graph with 10 km radius from source and mode of transport
+def make_graph(source, dest, mode):
+    source_list = source.replace(" ", "").split(",")
+    dest_list = dest.replace(" ", "").split(",")
+    if dest_list[-3] == source_list[-3]:
+        print("Cities match, getting graph for city")
+        graph = get_place_mode_graph(dest_list[-3], dest_list[-2], mode)
+    else:
+        print("Cities do not match, getting graph of 10 km radius from source")
+        graph = get_radius_mode_graph(source, mode)
     return graph
 
 

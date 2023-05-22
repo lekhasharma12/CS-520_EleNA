@@ -17,7 +17,6 @@ def shortest_path():
     city, state = "Amherst", "MA"
 
     data = request.json
-    print(data)
     source, destination, elevation_type, percent_increase, mode = data["source"]["description"], data["destination"]["description"], data["elevation_type"], int(data["percent_increase"]), data["mode"]
 
     st = time.time()

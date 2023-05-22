@@ -9,7 +9,7 @@ class Route:
         self.elevation_type = elevation_type
         self.percent_increase = percent_increase
         self.mode = mode
-        self.graph = make_graph(source, mode)
+        self.graph = make_graph(source, destination, mode)
         source_coordinates = ox.geocode(source)
         destination_coordinates = ox.geocode(destination)
         self.source_node = get_node_from_coordinates(self.graph, source_coordinates)
