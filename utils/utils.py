@@ -71,7 +71,7 @@ def validate_for_errors(source, destination, elevation_type, percent_increase, m
         print("distance between the points, ", geopy.distance.geodesic(source_coordinates, destination_coordinates).km)
     if elevation_type not in ['max', 'min']:
         return True, "Elevation Type is incorrect. Please select either minimum or maximum elevation"
-    if percent_increase > 100 and percent_increase < 0:
+    if percent_increase > 100 or percent_increase < 0:
         return True, "Percentage increase in the shortest route is incorrect. Please select a value between " \
                       "0-100"
     if mode not in ['walk', 'bike']:
@@ -133,6 +133,7 @@ def get_radius_mode_graph(source, mode):
         graph = add_elevation_data(graph)
         pickle.dump(graph, open(path, 'wb'))
     print("get_radius_mode_graph - Done")
+    return graph
 
 # method to make graph with 10 km radius from source and mode of transport
 def make_graph(source, dest, mode):
