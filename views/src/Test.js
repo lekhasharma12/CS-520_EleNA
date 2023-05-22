@@ -305,9 +305,9 @@ class Test extends Component {
                                         :
                                         this.state.isError ?
                                         <Grid>
-                                            <Box sx={{ border: 2, borderColor: '#ff0000' }}>
-                                                <Typography>
-                                                    {this.state.results}
+                                            <Box sx={{ border: 2, borderColor: '#ff0000', padding: '5px'}}>
+                                                <Typography sx={{ fontSize: 18 , color: '#ff0000'}}>
+                                                    {"ERROR - \n" + this.state.results}
                                                 </Typography>
                                             </Box>
                                         </Grid>
