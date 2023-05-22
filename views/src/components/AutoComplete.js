@@ -30,6 +30,12 @@ export default function AutoComplete(props) {
     const loaded = React.useRef(false);
     const type = React.use
 
+    React.useEffect(() => {
+        if(props.value === '') {
+            setValue(props.value)
+        }
+    })
+
     if (typeof window !== 'undefined' && !loaded.current) {
         if (!document.querySelector('#google-maps')) {
             loadScript(

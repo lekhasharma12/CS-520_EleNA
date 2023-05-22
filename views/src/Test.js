@@ -20,7 +20,6 @@ class Test extends Component {
         super(props);
 
         this.state = {
-            sourceSuggestions: [],
             source: '',
             destination: '',
             elevation: 0,
@@ -37,7 +36,25 @@ class Test extends Component {
     }
 
     handleDataFromChild(data, id) {
+        if(data == null){
+            data = ''
+        }
         this.setState({ [id]: data })
+    }
+
+    handleReset() {
+        this.setState({
+            source: '',
+            destination: '',
+            elevation: 0,
+            mode: 0,
+            percent: 0,
+            results: '',
+            path: [],
+            loading: false,
+            isError: false,
+            fetched: false
+        })
     }
 
     async handleSubmit(event) {
@@ -80,6 +97,7 @@ class Test extends Component {
 
         this.setState({ loading: true })
         this.setState({fetch: true})
+        // this.setState({path:[]})
 
         fetch("http://127.0.0.1:5000/elena/shortestpath", requestOptions)
             .then(response => response.json())
@@ -166,6 +184,7 @@ class Test extends Component {
                                             label="Source"
                                             name="source"
                                             onData={(data, id) => this.handleDataFromChild(data, id)}
+                                            value={this.state.source}
                                         />
                                     </Grid>
                                 </Grid>
@@ -184,6 +203,7 @@ class Test extends Component {
                                             label="Destination"
                                             name="destination"
                                             onData={(data, id) => this.handleDataFromChild(data, id)}
+                                            value={this.state.destination}
                                         />
                                     </Grid>
 
@@ -286,6 +306,7 @@ class Test extends Component {
                                         {this.state.percent}%
                                     </Typography>
                                     <Button
+                                        disabled= {this.state.source == '' || this.state.destination == '' ? true : false}
                                         type="button"
                                         fullWidth
                                         variant="contained"
@@ -296,6 +317,20 @@ class Test extends Component {
                                         }}
                                     >
                                         Find Path
+                                    </Button>
+                                    <Button
+                                        type="button"
+                                        fullWidth
+                                        variant="contained"
+                                        size='large'
+                                        sx={{ borderRadius: 1, height: 40, mb: 2,  
+                                            width: '50%', justifyContent:'center', ml: 12,
+                                        }}
+                                        onClick={(event) => {
+                                            this.handleReset(event)
+                                        }}
+                                    >
+                                        Reset
                                     </Button>
                                 </Grid>
                                 <Grid>
