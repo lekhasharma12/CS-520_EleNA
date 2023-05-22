@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { GoogleMap, Polyline } from '@react-google-maps/api';
+import { GoogleMap, Polyline, Marker} from '@react-google-maps/api';
+import sourceMarker from './../assets/circle-fill.svg';
 
 const containerStyle = {
-    width: '800px',
+    width: '840px',
     height: '800px'
 };
 
@@ -13,16 +14,16 @@ const center = {
 
 const options = {
     strokeColor: '#1976d2',
-    strokeOpacity: 10,
-    strokeWeight: 6,
-    fillColor: '#1976d2',
-    fillOpacity: 0.35,
-    clickable: false,
-    draggable: false,
-    editable: false,
-    visible: true,
-    radius: 30000,
-    zIndex: 1
+    strokeOpacity: 1,
+    strokeWeight: 3,
+    // fillColor: '#1976d2',
+    // fillOpacity: 0.35,
+    // clickable: false,
+    // draggable: false,
+    // editable: false,
+    // visible: true,
+    // radius: 30000,
+    // zIndex: 1
 };
 
 const onLoad = polyline => {
@@ -37,7 +38,8 @@ class Map extends Component {
             currentLocation: center,
             options: options,
             path: [],
-            center: ''
+            center: '',
+            loading: false
         }
     }
 
@@ -57,8 +59,10 @@ class Map extends Component {
         }
     }
 
+
     componentDidUpdate(prevProps) {
         if (prevProps.path !== this.props.path) {
+            this.state.path = []
             this.setState({ path: this.props.path });
             let latSum = 0, lngSum = 0
             for (let i = 0; i < this.props.path.length; i++) {
@@ -75,7 +79,6 @@ class Map extends Component {
     }
 
     render() {
-        console.log("this.state.path", this.state.path)
         return (
             <div>
                 {this.state.path.length == 0 ?
@@ -91,8 +94,9 @@ class Map extends Component {
                         center={this.state.currentLocation}
                         zoom={14}
                     >
+                        <Marker position={this.state.path[0]} icon={sourceMarker}></Marker>
+                        <Marker position={this.state.path[this.state.path.length-1]}></Marker>
                         <Polyline
-                            onLoad={onLoad}
                             path={this.state.path}
                             options={options}
                         />

@@ -84,6 +84,8 @@ def get_coordinates_from_node(graph, node):
 
 
 def get_node_from_coordinates(graph, coordinates):
+    if graph is None:
+        print("WHHOPS")
     return ox.nearest_nodes(graph, coordinates[1], coordinates[0])
 
 
@@ -133,6 +135,7 @@ def get_radius_mode_graph(source, mode):
         graph = add_elevation_data(graph)
         pickle.dump(graph, open(path, 'wb'))
     print("get_radius_mode_graph - Done")
+    return graph
 
 # method to make graph with 10 km radius from source and mode of transport
 def make_graph(source, dest, mode):

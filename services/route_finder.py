@@ -58,6 +58,21 @@ def dijkstras(graph, source_node, dest_node):
     }
 
 
+'''
+This method is a modified version of Dijkstra's for elevation type and checking limit of percent increase in shortest path.
+
+We call the usual Dijkstra's method to fetch the shortest distance of every node in given graph from the source. 
+our nodes are now retrieved on the basis of elevation type, either minimum or maximum.
+
+For each of these nodes, we check if the current distance of this node from source with elevation path falls within the range of
+percent increase of the shortest path. If the distance does not satisfy the condition, we move to the next neighbouring node.
+If the distance, satisfies the condition, we move ahead with calculation of elevation variance and 
+add the node in the path if it is less/more varied than current elevation for minimum/maximum elevation.
+
+Finally we check if there actually is a path to destination using our elevation approach, and return that.
+If the above path does not exist, we return the shortest path through Dijkstra's.
+'''
+
 def dijkstras_with_elevation(graph, source_node, dest_node, elevation_type, pct_increase, mode):
     elevations = {node: math.inf for node in graph.nodes}
     distances = {node: 0 for node in graph.nodes}
@@ -126,7 +141,7 @@ def dijkstras_with_elevation(graph, source_node, dest_node, elevation_type, pct_
         "distance": final_distance,
         "time": get_time_for_mode(final_distance, mode),
         "path": [get_coordinates_from_node(graph, node) for node in final_path]
-        # "path": path
+        # "path": final_path
     }
 
 
@@ -190,6 +205,24 @@ def astar(graph, source_node, dest_node):
         "path": paths[dest_node]
     }
 
+
+'''
+Implemenation is similar to dijkstras_with_elevation, only algorithm is changed to astar.
+
+
+This method is a modified version of Dijkstra's for elevation type and checking limit of percent increase in shortest path.
+
+We call the usual A* method to fetch the shortest distance of every node in given graph from the source. 
+our nodes are now retrieved on the basis of elevation type, either minimum or maximum.
+
+For each of these nodes, we check if the current distance of this node from source with elevation path falls within the range of
+percent increase of the shortest path. If the distance does not satisfy the condition, we move to the next neighbouring node.
+If the distance, satisfies the condition, we move ahead with calculation of elevation variance and 
+add the node in the path if it is less/more varied than current elevation for minimum/maximum elevation.
+
+Finally we check if there actually is a path to destination using our elevation approach, and return that.
+If the above path does not exist, we return the shortest path through A*
+'''
 
 def astar_with_elevation(graph, source_node, dest_node, elevation_type, pct_increase, mode):
     elevations = {node: math.inf for node in graph.nodes}

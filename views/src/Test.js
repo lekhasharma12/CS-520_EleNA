@@ -93,6 +93,7 @@ class Test extends Component {
                         lng: lng
                     }));
                     this.setState({ path: convertedCoordinates })
+                    this.setState({isError: false})
                 } else {
                     this.setState({isError: true})
                 }
