@@ -8,9 +8,7 @@ import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 // import MyComponents from './Map';
 import { Autocomplete, Slider } from '@mui/material';
-import axios from 'axios';
-// import AutoComplete from './AutoComplete';
-// import Auto from './AutoComplete';
+
 import GoogleMaps from './AutoComplete';
 
 // import { Loader } from "@googlemaps/js-api-loader"

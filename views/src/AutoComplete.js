@@ -2,14 +2,11 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import parse from 'autosuggest-highlight/parse';
 import { debounce } from '@mui/material/utils';
 
-// This key was created specifically for the demo in mui.com.
-// You need to create a new one for your application.
 const GOOGLE_MAPS_API_KEY = 'AIzaSyB4k2WLIJibVJ8ZmDTHtalCRVcDbfkPepM';
 
 function loadScript(src, position, id) {
@@ -125,7 +122,7 @@ export default function GoogleMaps(props) {
                     id={props.id}
                     label={props.label}
                     name={props.name}
-                    autoFocus= {props.id === 'source'? true : false}
+                    autoFocus={props.id === 'source' ? true : false}
                     size='small'
                 />
             )}

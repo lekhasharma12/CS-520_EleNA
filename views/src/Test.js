@@ -5,11 +5,10 @@ import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { AlertTitle, Slider } from '@mui/material';
+import { Slider } from '@mui/material';
 import GoogleMaps from './AutoComplete';
 import MyComponents from './Map';
-import Spinner from 'react-bootstrap/Spinner';
-import {BarLoader}  from 'react-spinners';
+import { BarLoader } from 'react-spinners';
 
 const defaultTheme = createTheme();
 
@@ -28,10 +27,8 @@ class Test extends Component {
             results: '',
             path: [],
             loading: false,
-            isError: false
         }
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleError = this.handleError.bind(this);
 
     }
 
@@ -39,14 +36,8 @@ class Test extends Component {
         this.setState({ [id]: data })
     }
 
-    handleError() {
-        this.setState({isError: false})
-        alert("Please enter all inputs!")
-        
-    }
-
     async handleSubmit(event) {
-        
+
 
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
@@ -65,7 +56,7 @@ class Test extends Component {
             elevation = 'max'
         }
 
-        if(this.state.source == '' || this.state.destination == '') {
+        if (this.state.source == '' || this.state.destination == '') {
             alert('Please input source and destination!!')
             return
         }
@@ -85,26 +76,26 @@ class Test extends Component {
             redirect: 'follow'
         };
 
-        this.setState({loading: true})
+        this.setState({ loading: true })
 
-        
+
         fetch("http://127.0.0.1:5000/elena/shortestpath", requestOptions)
             .then(response => response.json())
             .then(result => {
                 this.setState({ results: result })
-                
+
                 const convertedCoordinates = result.path.map(([lng, lat]) => ({
                     lat: lat,
                     lng: lng
                 }));
                 this.setState({ path: convertedCoordinates })
-                this.setState({loading: false})
-                
+                this.setState({ loading: false })
+
             })
             .catch(error => {
                 console.log('error', error)
                 alert(`Some Error ocurred! Please try again later`)
-                this.setState({loading: false})
+                this.setState({ loading: false })
             });
     }
 
@@ -113,10 +104,7 @@ class Test extends Component {
             <ThemeProvider theme={defaultTheme}>
                 <Grid container component="main" sx={{ height: '1vh' }}>
                     <CssBaseline />
-                    
-                    {/* <Auto/> */}
                     <Grid
-                        // fullWidth
                         md={5}
                         component={Paper}
                         sx={{
@@ -125,19 +113,16 @@ class Test extends Component {
                     >
                         <Grid
                             sx={{
-                                ml: 10,
-                                // mt: 4
+                                ml: 10
                             }}
                         >
                             <img
                                 src={require('./assets/elena_logo.png')}
                                 style={{
                                     width: 100, height: 100,
-                                    marginLeft: 170, backgroundColor:'red'
+                                    marginLeft: 170, backgroundColor: 'red'
                                 }}
                             />
-                            
-
                             <Grid
                                 component="form"
                                 sx={{
@@ -195,7 +180,7 @@ class Test extends Component {
                                 }}>
                                     <Typography
                                         component="h5"
-                                        sx={{fontWeight:'bold'}}
+                                        sx={{ fontWeight: 'bold' }}
                                     >
                                         Elevation and Mode
                                     </Typography>
@@ -267,7 +252,7 @@ class Test extends Component {
                                         component="h5"
                                         sx={{
                                             mt: 3,
-                                            fontWeight:'bold'
+                                            fontWeight: 'bold'
                                         }}
                                     >
                                         % increase from shortest path
@@ -303,9 +288,9 @@ class Test extends Component {
                                     </Button>
                                 </Grid>
                                 <Grid>
-                                    {this.state.loading === true ? 
-                                        <Grid sx={{ml: 20}}>
-                                            <BarLoader color="#24a0ed"/>
+                                    {this.state.loading === true ?
+                                        <Grid sx={{ ml: 20 }}>
+                                            <BarLoader color="#24a0ed" />
                                         </Grid>
                                         :
                                         this.state.results != '' &&
@@ -324,7 +309,7 @@ class Test extends Component {
                                             </Typography>
                                         </Grid>
                                     }
-                                    
+
                                 </Grid>
                             </Grid>
                         </Grid>
@@ -342,23 +327,3 @@ class Test extends Component {
 }
 
 export default Test;
-
-
-
-// {this.state.results != '' ?
-//                                         <Grid height={100}>
-//                                             <Typography sx={{ marginLeft: 10, fontSize: 20 }}>
-//                                                 Estimated Time: {this.state.results.time}
-//                                             </Typography>
-//                                             <Typography sx={{ marginLeft: 10, fontSize: 20 }}>
-//                                                 Total Distance: {this.state.results.distance}
-//                                             </Typography>
-//                                             <Typography sx={{ marginLeft: 10, fontSize: 20 }}>
-//                                                 Elevation Gain: {this.state.results.elevation}
-//                                             </Typography>
-//                                         </Grid>
-//                                         :
-//                                         <Spinner animation="border"/>
-//                                             // {/* <span className="visually-hidden">Loading...</span> */}
-//                                         // </Spinner>
-//                                     }
