@@ -4,6 +4,7 @@ import requests
 import os
 import pickle
 import math
+import geopy.distance
 
 
 # method to fetch elevation data from open topo data for all nodes i the graph
@@ -64,12 +65,14 @@ def validate_for_errors(source, destination, elevation_type, percent_increase, m
         return True, "Source coordinates are not correct."
     if len(destination_coordinates) != 2:
         return True, "Destination coordinates are not correct."
-    if math.dist(source_coordinates, destination_coordinates) > 10000:
+    if geopy.distance.geodesic(source_coordinates, destination_coordinates).km > 10:
         return True, "Source and destination are further than 10km. Please enter places within 10km radius."
+    else:
+        print("distance between the points, ", geopy.distance.geodesic(source_coordinates, destination_coordinates).km)
     if elevation_type not in ['max', 'min']:
         return True, "Elevation Type is incorrect. Please select either minimum or maximum elevation"
-    if percent_increase > 100:
-        return True, "Percentage increase in the shortest route is greater than 100. Please select a value between " \
+    if percent_increase > 100 and percent_increase < 0:
+        return True, "Percentage increase in the shortest route is incorrect. Please select a value between " \
                       "0-100"
     if mode not in ['walk', 'bike']:
         return True, "Mode of transport is incorrect. Please select either walking or biking"
@@ -140,7 +143,7 @@ def get_path_distance(graph, path):
     for i in range(len(path)-1):
         edge_data = graph.edges[path[i], path[i+1], 0]
         distance += edge_data['length']
-    return distance
+    return distance/1000
 
 
 def get_max_elevation(graph, path):
@@ -155,3 +158,10 @@ def get_min_elevation(graph, path):
     for node in path:
         ele = graph.nodes[node]['elevation'] if graph.nodes[node]['elevation'] < ele else ele
     return ele
+
+
+def get_time_for_mode(distance, mode):
+    if mode == 'walk':
+        return distance/4
+    else:
+        return distance/20

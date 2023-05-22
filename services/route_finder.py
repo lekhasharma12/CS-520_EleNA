@@ -1,6 +1,6 @@
 import math
 from queue import PriorityQueue
-from utils.utils import distance_till_dest, elevation_diff_with_dest, get_coordinates_from_node, get_max_elevation, get_min_elevation
+from utils.utils import distance_till_dest, elevation_diff_with_dest, get_coordinates_from_node, get_max_elevation, get_min_elevation, get_path_distance, get_time_for_mode
 
 
 def dijkstras(graph, source_node, dest_node):
@@ -58,7 +58,7 @@ def dijkstras(graph, source_node, dest_node):
     }
 
 
-def dijkstras_with_elevation(graph, source_node, dest_node, elevation_type, pct_increase):
+def dijkstras_with_elevation(graph, source_node, dest_node, elevation_type, pct_increase, mode):
     elevations = {node: math.inf for node in graph.nodes}
     distances = {node: 0 for node in graph.nodes}
     paths = {node: [] for node in graph.nodes}
@@ -75,9 +75,6 @@ def dijkstras_with_elevation(graph, source_node, dest_node, elevation_type, pct_
 
     node_count = 0
     increment_factor = (1 + (pct_increase / 100))
-    # max_distance = get_path_distance(graph, shortest_path) * increment_factor
-    # print("Actual distance", get_path_distance(graph, shortest_path))
-    # print("Max allowed distance", max_distance)
     while not queue.empty():
         (elevation, node) = queue.get()
 
@@ -119,14 +116,16 @@ def dijkstras_with_elevation(graph, source_node, dest_node, elevation_type, pct_
     print("D node count ", node_count)
     if distances[dest_node] != 0 and distances[dest_node] < dijkstras_res['distance'][dest_node] * increment_factor:
         print("route exists")
-        path = paths[dest_node]
+        final_path = paths[dest_node]
     else:
-        path = dijkstras_res['path']
+        final_path = dijkstras_res['path']
     # return total elevation and path taken.
+    final_distance = get_path_distance(graph, final_path)
     return {
-        "elevation": (get_min_elevation(graph, path), get_max_elevation(graph, path)),
-        "distance": distances[dest_node],
-        "path": [get_coordinates_from_node(graph, node) for node in path]
+        "elevation": (get_min_elevation(graph, final_path), get_max_elevation(graph, final_path)),
+        "distance": final_distance,
+        "time": get_time_for_mode(final_distance, mode),
+        "path": [get_coordinates_from_node(graph, node) for node in final_path]
         # "path": path
     }
 
@@ -192,7 +191,7 @@ def astar(graph, source_node, dest_node):
     }
 
 
-def astar_with_elevation(graph, source_node, dest_node, elevation_type, pct_increase):
+def astar_with_elevation(graph, source_node, dest_node, elevation_type, pct_increase, mode):
     elevations = {node: math.inf for node in graph.nodes}
     distances = {node: 0 for node in graph.nodes}
     paths = {node: [] for node in graph.nodes}
@@ -257,13 +256,15 @@ def astar_with_elevation(graph, source_node, dest_node, elevation_type, pct_incr
     print("A node count ", node_count)
     if distances[dest_node] != 0 and distances[dest_node] < astar_res['distance'][dest_node] * increment_factor:
         print("route exists")
-        path = paths[dest_node]
+        final_path = paths[dest_node]
     else:
-        path = astar_res['path']
+        final_path = astar_res['path']
     # return total elevation and path taken.
+    final_distance = get_path_distance(graph, final_path)
     return {
-        "elevation": (get_min_elevation(graph, path), get_max_elevation(graph, path)),
-        "distance": distances[dest_node],
-        "path": [get_coordinates_from_node(graph, node) for node in path]
+        "elevation": (get_min_elevation(graph, final_path), get_max_elevation(graph, final_path)),
+        "distance": final_distance,
+        "time": get_time_for_mode(final_distance, mode),
+        "path": [get_coordinates_from_node(graph, node) for node in final_path]
         # "path": path
     }

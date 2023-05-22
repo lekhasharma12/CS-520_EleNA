@@ -25,15 +25,16 @@ def shortest_path():
 
     if error:
         print(error_msg)
-        return error_msg
+        # error_msg = {"error": error_msg}
+        return jsonify(error_msg)
     else:
         route = Route(source, destination, elevation_type, percent_increase, mode, city, state)
 
         # shortest_path = nx.shortest_path(route.graph, route.source_node, route.destination_node, weight='length')
 
         # get shortest path with given conditions using dijkstras and astar
-        result_dijkstras = dijkstras_with_elevation(route.graph, route.source_node, route.destination_node, route.elevation_type, route.percent_increase)
-        result_astar = astar_with_elevation(route.graph, route.source_node, route.destination_node, route.elevation_type, route.percent_increase)
+        result_dijkstras = dijkstras_with_elevation(route.graph, route.source_node, route.destination_node, route.elevation_type, route.percent_increase, route.mode)
+        result_astar = astar_with_elevation(route.graph, route.source_node, route.destination_node, route.elevation_type, route.percent_increase, route.mode)
 
         min_dijkstras, max_dijkstras = result_dijkstras['elevation']
         min_astar, max_astar = result_astar['elevation']
