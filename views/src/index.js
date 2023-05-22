@@ -36,7 +36,6 @@ if (typeof window !== 'undefined') {
 }
 root.render(
   <React.StrictMode>
-    {/* <MyComponents /> */}
     {/* <Form /> */}
     {/* <SignInSide/> */}
     <Test/>

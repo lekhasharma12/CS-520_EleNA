@@ -98,7 +98,6 @@ export default function GoogleMaps(props) {
         <Autocomplete
             freeSolo
             id="google-map-demo"
-            // sx={{ width: 300 }}
             fullWidth
             getOptionLabel={(option) =>
                 typeof option === 'string' ? option : option.description
@@ -109,7 +108,6 @@ export default function GoogleMaps(props) {
             includeInputInList
             filterSelectedOptions
             value={value}
-            //   noOptionsText="No locations"
             onChange={(event, newValue) => {
                 setOptions(newValue ? [newValue, ...options] : options);
                 setValue(newValue);
@@ -121,15 +119,12 @@ export default function GoogleMaps(props) {
             renderInput={(params) => (
                 <TextField
                     {...params}
-                    // label="Add a location" 
+                    required
                     fullWidth
                     margin="normal"
-                    // required
-                    // fullWidth
                     id={props.id}
                     label={props.label}
                     name={props.name}
-                    // autoComplete="email"
                     autoFocus= {props.id === 'source'? true : false}
                     size='small'
                 />
@@ -146,9 +141,6 @@ export default function GoogleMaps(props) {
                 return (
                     <li {...props}>
                         <Grid container alignItems="center">
-                            {/* <Grid item sx={{ display: 'flex', width: 44 }}>
-                <LocationOnIcon sx={{ color: 'text.secondary' }} />
-              </Grid> */}
                             <Grid item sx={{ width: 'calc(100% - 44px)', wordWrap: 'break-word' }}>
                                 {parts.map((part, index) => (
                                     <Box

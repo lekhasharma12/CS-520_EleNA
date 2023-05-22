@@ -1,18 +1,15 @@
 import React, { Component } from 'react';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-// import MyComponents from './Map';
-import { Slider } from '@mui/material';
+import { AlertTitle, Slider } from '@mui/material';
 import GoogleMaps from './AutoComplete';
 import MyComponents from './Map';
-import TextareaAutosize from '@mui/base/TextareaAutosize';
-
-// import { Loader } from "@googlemaps/js-api-loader"
+import Spinner from 'react-bootstrap/Spinner';
+import {BarLoader}  from 'react-spinners';
 
 const defaultTheme = createTheme();
 
@@ -28,27 +25,28 @@ class Test extends Component {
             elevation: 0,
             mode: 0,
             percent: 0,
-            results: ''
+            results: '',
+            path: [],
+            loading: false,
+            isError: false
         }
-
-        this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-
-    }
-
-    handleChange(event) {
-        const target = event.target
-        const name = target.name
-
-        const value = target.value
+        this.handleError = this.handleError.bind(this);
 
     }
 
     handleDataFromChild(data, id) {
-        this.setState({[id]: data})
+        this.setState({ [id]: data })
+    }
+
+    handleError() {
+        this.setState({isError: false})
+        alert("Please enter all inputs!")
+        
     }
 
     async handleSubmit(event) {
+        
 
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
@@ -57,14 +55,19 @@ class Test extends Component {
 
         if (this.state.mode == 0) {
             mode = 'bike'
-        } else{
+        } else {
             mode = 'walk'
         }
 
         if (this.state.elevation == 0) {
             elevation = 'min'
-        } else{
+        } else {
             elevation = 'max'
+        }
+
+        if(this.state.source == '' || this.state.destination == '') {
+            alert('Please input source and destination!!')
+            return
         }
 
         var raw = JSON.stringify({
@@ -82,12 +85,27 @@ class Test extends Component {
             redirect: 'follow'
         };
 
+        this.setState({loading: true})
+
+        
         fetch("http://127.0.0.1:5000/elena/shortestpath", requestOptions)
             .then(response => response.json())
             .then(result => {
-                this.setState({results: result})
+                this.setState({ results: result })
+                
+                const convertedCoordinates = result.path.map(([lng, lat]) => ({
+                    lat: lat,
+                    lng: lng
+                }));
+                this.setState({ path: convertedCoordinates })
+                this.setState({loading: false})
+                
             })
-            .catch(error => console.log('error', error));
+            .catch(error => {
+                console.log('error', error)
+                alert(`Some Error ocurred! Please try again later`)
+                this.setState({loading: false})
+            });
     }
 
     render() {
@@ -95,6 +113,7 @@ class Test extends Component {
             <ThemeProvider theme={defaultTheme}>
                 <Grid container component="main" sx={{ height: '1vh' }}>
                     <CssBaseline />
+                    
                     {/* <Auto/> */}
                     <Grid
                         // fullWidth
@@ -102,31 +121,32 @@ class Test extends Component {
                         component={Paper}
                         sx={{
                             width: '100px',
-                            // backgroundColor: 'brown'
-
                         }}
                     >
                         <Grid
                             sx={{
                                 ml: 10,
-                                mt: 4
-                                // backgroundColor:'green'
+                                // mt: 4
                             }}
                         >
-                            <Typography component="h1" variant="h5" align='center'>
-                                EleNa
-                            </Typography>
+                            <img
+                                src={require('./assets/elena_logo.png')}
+                                style={{
+                                    width: 100, height: 100,
+                                    marginLeft: 170, backgroundColor:'red'
+                                }}
+                            />
+                            
+
                             <Grid
                                 component="form"
-                                // onSubmit={this.handleSubmit}
                                 sx={{
-                                    mt: 1,
+                                    mt: -2,
                                     mr: 10,
                                     display: 'flex',
-                                    flexDirection: 'column',
+                                    flexDirection: 'column'
                                 }}
                                 fullWidth
-
                             >
                                 <Grid
                                     sx={{
@@ -135,7 +155,7 @@ class Test extends Component {
                                     }}
                                 >
                                     <img
-                                        src={require('./source.png')}
+                                        src={require('./assets/source.png')}
                                         style={{
                                             width: 15, height: 15,
                                             marginTop: 30, marginRight: 8
@@ -147,7 +167,6 @@ class Test extends Component {
                                         name="source"
                                         onData={(data, id) => this.handleDataFromChild(data, id)}
                                     />
-
                                 </Grid>
                                 <Grid
                                     sx={{
@@ -156,7 +175,7 @@ class Test extends Component {
                                     }}
                                 >
                                     <img
-                                        src={require('./destination.png')}
+                                        src={require('./assets/destination.png')}
                                         style={{
                                             width: 20, height: 20,
                                             marginTop: 25, marginRight: 5
@@ -176,6 +195,7 @@ class Test extends Component {
                                 }}>
                                     <Typography
                                         component="h5"
+                                        sx={{fontWeight:'bold'}}
                                     >
                                         Elevation and Mode
                                     </Typography>
@@ -196,7 +216,6 @@ class Test extends Component {
                                         >
                                             Min
                                         </Button>
-
                                         <Button
                                             type="button"
                                             fullWidth
@@ -209,7 +228,6 @@ class Test extends Component {
                                         >
                                             Max
                                         </Button>
-
                                     </Grid>
                                     <Grid sx={{
                                         mt: -4,
@@ -227,10 +245,9 @@ class Test extends Component {
                                             }}
                                         >
                                             <img
-                                                src={require('./ion_bicycle.png')}
+                                                src={require('./assets/ion_bicycle.png')}
                                             />
                                         </Button>
-
                                         <Button
                                             type="button"
                                             fullWidth
@@ -242,16 +259,15 @@ class Test extends Component {
                                             }}
                                         >
                                             <img
-                                                src={require('./walk.png')}
+                                                src={require('./assets/walk.png')}
                                             />
                                         </Button>
-
                                     </Grid>
-
                                     <Typography
                                         component="h5"
                                         sx={{
-                                            mt: 3
+                                            mt: 3,
+                                            fontWeight:'bold'
                                         }}
                                     >
                                         % increase from shortest path
@@ -273,8 +289,6 @@ class Test extends Component {
                                     >
                                         {this.state.percent}%
                                     </Typography>
-
-
                                     <Button
                                         type="button"
                                         fullWidth
@@ -288,30 +302,36 @@ class Test extends Component {
                                         Find Path
                                     </Button>
                                 </Grid>
-
-
                                 <Grid>
-                                    {this.state.results != '' &&
+                                    {this.state.loading === true ? 
+                                        <Grid sx={{ml: 20}}>
+                                            <BarLoader color="#24a0ed"/>
+                                        </Grid>
+                                        :
+                                        this.state.results != '' &&
                                         <Grid height={100}>
-                                            <Typography sx={{ marginLeft: 10, fontSize: 20 }}>
+                                            {/* <Typography sx={{ marginLeft: 10, fontSize: 20 }}>
                                                 Estimated Time: {this.state.results.time}
-                                            </Typography>
+                                            </Typography> */}
                                             <Typography sx={{ marginLeft: 10, fontSize: 20 }}>
                                                 Total Distance: {this.state.results.distance}
                                             </Typography>
                                             <Typography sx={{ marginLeft: 10, fontSize: 20 }}>
-                                                Elevation Gain: {this.state.results.elevation}
+                                                Minimum Elevation Gain: {this.state.results.elevation[0]}
+                                            </Typography>
+                                            <Typography sx={{ marginLeft: 10, fontSize: 20 }}>
+                                                Maximum Elevation Gain: {this.state.results.elevation[1]}
                                             </Typography>
                                         </Grid>
                                     }
-                                    {/* :
-                                    null
-                                    } */}
+                                    
                                 </Grid>
                             </Grid>
                         </Grid>
                     </Grid>
-                    <MyComponents />
+                    <MyComponents
+                        path={this.state.path}
+                    />
                 </Grid>
                 <Grid>
 
@@ -322,3 +342,23 @@ class Test extends Component {
 }
 
 export default Test;
+
+
+
+// {this.state.results != '' ?
+//                                         <Grid height={100}>
+//                                             <Typography sx={{ marginLeft: 10, fontSize: 20 }}>
+//                                                 Estimated Time: {this.state.results.time}
+//                                             </Typography>
+//                                             <Typography sx={{ marginLeft: 10, fontSize: 20 }}>
+//                                                 Total Distance: {this.state.results.distance}
+//                                             </Typography>
+//                                             <Typography sx={{ marginLeft: 10, fontSize: 20 }}>
+//                                                 Elevation Gain: {this.state.results.elevation}
+//                                             </Typography>
+//                                         </Grid>
+//                                         :
+//                                         <Spinner animation="border"/>
+//                                             // {/* <span className="visually-hidden">Loading...</span> */}
+//                                         // </Spinner>
+//                                     }

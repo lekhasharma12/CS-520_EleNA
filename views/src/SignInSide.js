@@ -177,7 +177,7 @@ class SignInSide extends Component {
                                 // style={{marginTop: 25, marginRight: 5}}
                             /> */}
                                     <img
-                                        src={require('./source.png')}
+                                        src={require('./assets/source.png')}
                                         style={{
                                             width: 15, height: 15,
                                             marginTop: 30, marginRight: 8
@@ -208,7 +208,7 @@ class SignInSide extends Component {
                                     }}
                                 >
                                     <img
-                                        src={require('./destination.png')}
+                                        src={require('./assets/destination.png')}
                                         style={{
                                             width: 20, height: 20,
                                             marginTop: 25, marginRight: 5
@@ -295,7 +295,7 @@ class SignInSide extends Component {
                                             }}
                                         >
                                             <img
-                                                src={require('./ion_bicycle.png')}
+                                                src={require('./assets/ion_bicycle.png')}
                                                 style={{
                                                     // width: 15, height: 15,
                                                     // marginTop: 30, marginRight: 8,
@@ -316,7 +316,7 @@ class SignInSide extends Component {
                                             }}
                                         >
                                             <img
-                                                src={require('./walk.png')}
+                                                src={require('./assets/walk.png')}
                                             // style={{
                                             //     // width: 15, height: 15,
                                             //     // marginTop: 30, marginRight: 8,
