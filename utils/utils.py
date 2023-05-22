@@ -90,6 +90,9 @@ def distance_till_dest(graph, node, dest):
     return math.dist(node_coordinates, dest_coordinates)
 
 
+def elevation_diff_with_dest(graph, node, dest):
+    return abs(graph.nodes[node]['elevation'] - graph.nodes[dest]['elevation'])
+
 # method to make graph for a given city and mode of transport
 def get_place_mode_graph(city, state, mode):
     path = f"./graphs/{city}_{mode}.pickle"
@@ -138,3 +141,17 @@ def get_path_distance(graph, path):
         edge_data = graph.edges[path[i], path[i+1], 0]
         distance += edge_data['length']
     return distance
+
+
+def get_max_elevation(graph, path):
+    ele = 0
+    for node in path:
+        ele = graph.nodes[node]['elevation'] if graph.nodes[node]['elevation'] > ele else ele
+    return ele
+
+
+def get_min_elevation(graph, path):
+    ele = math.inf
+    for node in path:
+        ele = graph.nodes[node]['elevation'] if graph.nodes[node]['elevation'] < ele else ele
+    return ele
