@@ -12,10 +12,10 @@ const center = {
 };
 
 const options = {
-    strokeColor: '#24A0ED',
+    strokeColor: '#1976d2',
     strokeOpacity: 10,
     strokeWeight: 6,
-    fillColor: '#24A0ED',
+    fillColor: '#1976d2',
     fillOpacity: 0.35,
     clickable: false,
     draggable: false,

@@ -9,6 +9,7 @@ import { Slider } from '@mui/material';
 import GoogleMaps from './AutoComplete';
 import MyComponents from './Map';
 import { BarLoader } from 'react-spinners';
+import {DirectionsWalk, DirectionsBike, Brightness1Outlined, LocationOn} from '@mui/icons-material';
 
 const defaultTheme = createTheme();
 
@@ -102,14 +103,16 @@ class Test extends Component {
     render() {
         return (
             <ThemeProvider theme={defaultTheme}>
-                <Grid container component="main" sx={{ height: '1vh' }}>
+                <Grid container component="main" sx={{ height: '1vh', display: 'flex'}}>
                     <CssBaseline />
                     <Grid
-                        md={5}
+                        // md={5}
                         component={Paper}
                         sx={{
-                            width: '100px',
+                            // width: '100px',
+                            justifyContent: 'center', alignItems: 'center'
                         }}
+                        item xs={5}
                     >
                         <Grid
                             sx={{
@@ -117,10 +120,9 @@ class Test extends Component {
                             }}
                         >
                             <img
-                                src={require('./assets/elena_logo.png')}
+                                src={require('./assets/logo.png')}
                                 style={{
-                                    width: 100, height: 100,
-                                    marginLeft: 170, backgroundColor: 'red'
+                                    width: 135, height: 75, alignSelf: 'center', marginLeft: "28%"
                                 }}
                             />
                             <Grid
@@ -139,19 +141,17 @@ class Test extends Component {
                                         flexDirection: 'row',
                                     }}
                                 >
-                                    <img
-                                        src={require('./assets/source.png')}
-                                        style={{
-                                            width: 15, height: 15,
-                                            marginTop: 30, marginRight: 8
-                                        }}
-                                    />
-                                    <GoogleMaps
+                                    <Grid item xs={1}>
+                                        <Brightness1Outlined sx={{ color: '#1976d2', width:18, height:18, marginTop: '25px', marginLeft: '2px'}}/>
+                                    </Grid>
+                                    <Grid item xs={11}>
+                                        <GoogleMaps
                                         id="source"
                                         label="Source"
                                         name="source"
                                         onData={(data, id) => this.handleDataFromChild(data, id)}
                                     />
+                                    </Grid>
                                 </Grid>
                                 <Grid
                                     sx={{
@@ -159,19 +159,18 @@ class Test extends Component {
                                         flexDirection: 'row',
                                     }}
                                 >
-                                    <img
-                                        src={require('./assets/destination.png')}
-                                        style={{
-                                            width: 20, height: 20,
-                                            marginTop: 25, marginRight: 5
-                                        }}
-                                    />
-                                    <GoogleMaps
+                                    <Grid item xs={1} justify="flex-end" alignItems="center">
+                                        <LocationOn sx={{ color: '#1976d2', width:25, height:35, marginTop: '20px', marginRight: '-2px'}}/>
+                                    </Grid>
+                                    <Grid item xs={11}>
+                                        <GoogleMaps
                                         id="destination"
                                         label="Destination"
                                         name="destination"
                                         onData={(data, id) => this.handleDataFromChild(data, id)}
                                     />
+                                    </Grid>
+
                                 </Grid>
                                 <Grid sx={{
                                     display: 'flex',
@@ -193,7 +192,7 @@ class Test extends Component {
                                             type="button"
                                             fullWidth
                                             variant={this.state.elevation === 0 ? 'contained' : 'outlined'}
-                                            sx={{ borderRadius: 0, height: 50 }}
+                                            sx={{ borderRadius: 0, height: 40 }}
                                             size='small'
                                             onClick={() => {
                                                 this.setState({ elevation: 0 })
@@ -205,7 +204,7 @@ class Test extends Component {
                                             type="button"
                                             fullWidth
                                             variant={this.state.elevation === 1 ? 'contained' : 'outlined'}
-                                            sx={{ borderRadius: 0 }}
+                                            sx={{ borderRadius: 0, height: 40 }}
                                             size='small'
                                             onClick={() => {
                                                 this.setState({ elevation: 1 })
@@ -223,29 +222,25 @@ class Test extends Component {
                                             type="button"
                                             fullWidth
                                             variant={this.state.mode === 0 ? 'contained' : 'outlined'}
-                                            sx={{ mt: 3, mb: 2, borderRadius: 0 }}
+                                            sx={{ mt: 3, mb: 2, borderRadius: 0, height: 40 }}
                                             size='small'
                                             onClick={() => {
                                                 this.setState({ mode: 0 })
                                             }}
                                         >
-                                            <img
-                                                src={require('./assets/ion_bicycle.png')}
-                                            />
+                                            <DirectionsBike/>
                                         </Button>
                                         <Button
                                             type="button"
                                             fullWidth
                                             variant={this.state.mode === 1 ? 'contained' : 'outlined'}
-                                            sx={{ mt: 3, mb: 2, borderRadius: 0 }}
+                                            sx={{ mt: 3, mb: 2, borderRadius: 0, height: 40}}
                                             size='small'
                                             onClick={() => {
                                                 this.setState({ mode: 1 })
                                             }}
                                         >
-                                            <img
-                                                src={require('./assets/walk.png')}
-                                            />
+                                            <DirectionsWalk/>
                                         </Button>
                                     </Grid>
                                     <Typography
@@ -279,7 +274,7 @@ class Test extends Component {
                                         fullWidth
                                         variant="contained"
                                         size='large'
-                                        sx={{ mt: 5, mb: 2, borderRadius: 0, height: 60 }}
+                                        sx={{ mt: 5, mb: 2, borderRadius: 0, height: 40}}
                                         onClick={async (event) => {
                                             await this.handleSubmit(event)
                                         }}
@@ -290,22 +285,19 @@ class Test extends Component {
                                 <Grid>
                                     {this.state.loading === true ?
                                         <Grid sx={{ ml: 20 }}>
-                                            <BarLoader color="#24a0ed" />
+                                            <BarLoader color="#1976d2" />
                                         </Grid>
                                         :
                                         this.state.results != '' &&
                                         <Grid height={100}>
-                                            {/* <Typography sx={{ marginLeft: 10, fontSize: 20 }}>
-                                                Estimated Time: {this.state.results.time}
-                                            </Typography> */}
                                             <Typography sx={{ marginLeft: 10, fontSize: 20 }}>
-                                                Total Distance: {this.state.results.distance}
+                                                Estimated Time: {(this.state.results.time).toFixed(2)} hour(s)
                                             </Typography>
                                             <Typography sx={{ marginLeft: 10, fontSize: 20 }}>
-                                                Minimum Elevation Gain: {this.state.results.elevation[0]}
+                                                Total Distance: {(this.state.results.distance).toFixed(2)} km
                                             </Typography>
                                             <Typography sx={{ marginLeft: 10, fontSize: 20 }}>
-                                                Maximum Elevation Gain: {this.state.results.elevation[1]}
+                                                Elevation Variance : {this.state.results.elevation[1] -this.state.results.elevation[0]} m
                                             </Typography>
                                         </Grid>
                                     }
@@ -314,9 +306,11 @@ class Test extends Component {
                             </Grid>
                         </Grid>
                     </Grid>
-                    <MyComponents
+                    <Grid item xs={7}>
+                        <MyComponents
                         path={this.state.path}
                     />
+                    </Grid>
                 </Grid>
                 <Grid>
 
