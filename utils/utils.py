@@ -1,12 +1,12 @@
 import osmnx as ox
 import networkx as nx
 import requests
-import json
 import os
 import pickle
 import math
 
 
+# method to fetch elevation data from open topo data for all nodes i the graph
 def get_elevation_data(graph):
     url = 'https://api.opentopodata.org/v1/aster30m?locations='
     locations = []
@@ -38,16 +38,11 @@ def get_elevation_data(graph):
             elevation = result["elevation"]
             elevation_data.append({"elevation": elevation})
 
-    with open("elevation_data.txt", "w") as output:
-        output.write(str(elevation_data))
-
-    # elevation_file = open("elevation_data_100kms.txt", "r")
-    # elevation_data = elevation_file.read()
-    # elevation_data = json.loads(elevation_data)
     print('get_elevation_data - Done')
     return elevation_data
 
 
+# method to add elevation as an attribute for each node in the graph and return the graph
 def add_elevation_data(graph):
     elevation_data = get_elevation_data(graph)
     elevation_dict = {}
@@ -56,23 +51,6 @@ def add_elevation_data(graph):
 
     nx.set_node_attributes(graph, elevation_dict)
     print('add_elevation_data - Done')
-    return graph
-
-
-def get_place_mode_graph(city, state, mode):
-    path = f"./graphs/{city}_{mode}.pickle"
-    graph = nx.Graph()
-    if os.path.isfile(path):
-        print("Graph already saved, loading")
-        graph = pickle.load(open(path, 'rb'))
-    else:
-        print("Graph not saved, fetching from osmnx")
-        query = city + ", " + state
-        graph = ox.graph_from_place(query, network_type=mode)
-        graph = add_elevation_data(graph)
-        pickle.dump(graph, open(path, 'wb'))
-
-    print('get_graph_for_place - Done')
     return graph
 
 
@@ -112,18 +90,51 @@ def distance_till_dest(graph, node, dest):
     return math.dist(node_coordinates, dest_coordinates)
 
 
-def make_graph(source, mode):
-    path = f"./graphs/{source}_{mode}.pickle"
-    source_coordinates = ox.geocode(source)
+# method to make graph for a given city and mode of transport
+def get_place_mode_graph(city, state, mode):
+    path = f"./graphs/{city}_{mode}.pickle"
+
+    # check if graph is already present, load if present from files
     if os.path.isfile(path):
         print("Graph already saved, loading")
         graph = pickle.load(open(path, 'rb'))
+
+    # if not present get graph from osmnx
     else:
         print("Graph not saved, fetching from osmnx")
-        graph = ox.graph_from_point(source_coordinates, dist=15000, dist_type='bbox', network_type='walk')
+        query = city + ", " + state
+        graph = ox.graph_from_place(query, network_type=mode)
+        graph = add_elevation_data(graph)
+        pickle.dump(graph, open(path, 'wb'))
+
+    print('get_graph_for_place - Done')
+    return graph
+
+
+# method to make graph with 10 km radius from source and mode of transport
+def make_graph(source, mode):
+    path = f"./graphs/{source}_{mode}.pickle"
+    source_coordinates = ox.geocode(source)
+
+    # check if graph is already present, load if present from files
+    if os.path.isfile(path):
+        print("Graph already saved, loading")
+        graph = pickle.load(open(path, 'rb'))
+
+    # if not present get graph from osmnx
+    else:
+        print("Graph not saved, fetching from osmnx")
+        graph = ox.graph_from_point(source_coordinates, dist=10000, dist_type='bbox', network_type='walk')
         graph = add_elevation_data(graph)
         pickle.dump(graph, open(path, 'wb'))
     print("make_graph - Done")
     return graph
 
 
+# method to get total distance of a path
+def get_path_distance(graph, path):
+    distance = 0
+    for i in range(len(path)-1):
+        edge_data = graph.edges[path[i], path[i+1], 0]
+        distance += edge_data['length']
+    return distance
