@@ -35,7 +35,7 @@ def dijkstras(graph, source_node, dest_node):
 
             neighbor_elevation = graph.nodes[neighbor]['elevation']
             node_elevation = graph.nodes[node]['elevation']
-            elevation_diff = abs(node_elevation - neighbor_elevation)
+            elevation_diff = node_elevation - neighbor_elevation
 
             if neighbor not in visited:
                 curr_distance = distances[neighbor]
@@ -97,7 +97,7 @@ def dijkstras_with_elevation(graph, source_node, dest_node, elevation_type, pct_
             neighbor_distance = edge_data['length']
 
             neighbor_elevation = graph.nodes[neighbor]['elevation']
-            elevation_diff = abs(node_elevation - neighbor_elevation)
+            elevation_diff = node_elevation - neighbor_elevation
 
             # making the elevation negative so that priority queue is popped in descending order
             if elevation_type == 'min':
@@ -169,7 +169,7 @@ def astar(graph, source_node, dest_node):
 
             neighbor_elevation = graph.nodes[neighbor]['elevation']
             node_elevation = graph.nodes[node]['elevation']
-            elevation_diff = abs(node_elevation - neighbor_elevation)
+            elevation_diff = node_elevation - neighbor_elevation
 
             if neighbor not in visited:
                 curr_distance = distances[neighbor]
@@ -234,7 +234,7 @@ def astar_with_elevation(graph, source_node, dest_node, elevation_type, pct_incr
             neighbor_distance = edge_data['length']
 
             neighbor_elevation = graph.nodes[neighbor]['elevation']
-            elevation_diff = abs(node_elevation - neighbor_elevation)
+            elevation_diff = node_elevation - neighbor_elevation
 
             # making the elevation negative so that priority queue is popped in descending order
             if elevation_type == 'min':

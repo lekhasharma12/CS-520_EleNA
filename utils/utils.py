@@ -91,7 +91,7 @@ def distance_till_dest(graph, node, dest):
 
 
 def elevation_diff_with_dest(graph, node, dest):
-    return abs(graph.nodes[node]['elevation'] - graph.nodes[dest]['elevation'])
+    return graph.nodes[node]['elevation'] - graph.nodes[dest]['elevation']
 
 # method to make graph for a given city and mode of transport
 def get_place_mode_graph(city, state, mode):
