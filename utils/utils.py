@@ -139,11 +139,11 @@ def get_radius_mode_graph(source, mode):
 
 # method to make graph with 10 km radius from source and mode of transport
 def make_graph(source, dest, mode):
-    source_list = source.replace(" ", "").split(",")
-    dest_list = dest.replace(" ", "").split(",")
+    source_list = source.split(",")
+    dest_list = dest.split(",")
     if dest_list[-3] == source_list[-3]:
         print("Cities match, getting graph for city")
-        graph = get_place_mode_graph(dest_list[-3], dest_list[-2], mode)
+        graph = get_place_mode_graph(dest_list[-3].strip(), dest_list[-2].strip(), mode)
     else:
         print("Cities do not match, getting graph of 10 km radius from source")
         graph = get_radius_mode_graph(source, mode)
