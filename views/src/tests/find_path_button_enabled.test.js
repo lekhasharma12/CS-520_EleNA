@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import Test from '../Test';
+import Test from '.';
 import React from 'react';
 
 const { JSDOM } = require('jsdom');
