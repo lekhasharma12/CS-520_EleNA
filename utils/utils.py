@@ -59,6 +59,14 @@ def add_elevation_data(graph):
 # the percent increase for shortest path is within 100% and
 # the mode selected by user is either waling or biking
 def validate_for_errors(source, destination, elevation_type, percent_increase, mode):
+    try:
+        source_coordinates = ox.geocode(source)
+    except ValueError:
+        return True, "Source location not present in Open Street Map Data. Please try another location."
+    try:
+        destination_coordinates = ox.geocode(destination)
+    except ValueError:
+        return True, "Destination location not present in Open Street Map Data. Please try another location."
     source_coordinates = ox.geocode(source)
     destination_coordinates = ox.geocode(destination)
     if len(source_coordinates) != 2:

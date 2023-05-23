@@ -318,20 +318,20 @@ class Test extends Component {
                                     >
                                         Find Path
                                     </Button>
-                                    <Button
-                                        type="button"
-                                        fullWidth
-                                        variant="contained"
-                                        size='large'
-                                        sx={{ borderRadius: 1, height: 40, mb: 2,  
-                                            width: '50%', justifyContent:'center', ml: 12,
-                                        }}
-                                        onClick={(event) => {
-                                            this.handleReset(event)
-                                        }}
-                                    >
-                                        Reset
-                                    </Button>
+                                    {/*<Button*/}
+                                    {/*    type="button"*/}
+                                    {/*    fullWidth*/}
+                                    {/*    variant="contained"*/}
+                                    {/*    size='large'*/}
+                                    {/*    sx={{ borderRadius: 1, height: 40, mb: 2,  */}
+                                    {/*        width: '50%', justifyContent:'center', ml: 12,*/}
+                                    {/*    }}*/}
+                                    {/*    onClick={(event) => {*/}
+                                    {/*        this.handleReset(event)*/}
+                                    {/*    }}*/}
+                                    {/*>*/}
+                                    {/*    Reset*/}
+                                    {/*</Button>*/}
                                 </Grid>
                                 <Grid>
                                     {this.state.loading === true ?
