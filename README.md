@@ -31,9 +31,16 @@ npm install
 Change directory to the CS-520_EleNA project folder.
 
 Run the main.py to start the backend server using python3 main.py
+```sh
+python3 main.py
+```
 
 **To start the front-end**
 
 cd to views directory.
 
 Run the command npm start.
+```sh
+cd views
+npm start
+```
