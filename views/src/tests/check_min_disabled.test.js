@@ -17,7 +17,7 @@ const jsdom = new JSDOM(`
 const { window } = jsdom;
 
 
-test('Check is Find Path button is disabled when the source and destination are empty', () => {
+test('Check if Min Button is outlined based on user selection', () => {
 
     const testInstance = new Test();
   
