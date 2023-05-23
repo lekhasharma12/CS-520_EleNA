@@ -7,14 +7,14 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Slider } from '@mui/material';
-import AutoComplete from './components/AutoComplete';
-import Map from './components/Map';
+import AutoComplete from '../components/AutoComplete';
+import Map from '../components/Map';
 import { BarLoader } from 'react-spinners';
-import {DirectionsWalk, DirectionsBike, Brightness1Outlined, LocationOn} from '@mui/icons-material';
+import { DirectionsWalk, DirectionsBike, Brightness1Outlined, LocationOn } from '@mui/icons-material';
 
 const defaultTheme = createTheme();
 
-class Test extends Component {
+class HomeScreen extends Component {
 
     constructor(props) {
         super(props);
@@ -36,7 +36,7 @@ class Test extends Component {
     }
 
     handleDataFromChild(data, id) {
-        if(data == null){
+        if (data == null) {
             data = ''
         }
         this.setState({ [id]: data })
@@ -96,15 +96,17 @@ class Test extends Component {
         };
 
         this.setState({ loading: true })
-        this.setState({fetch: true})
+        this.setState({ fetch: true })
         // this.setState({path:[]})
 
         fetch("http://127.0.0.1:5000/elena/shortestpath", requestOptions)
             .then(response => response.json())
             .then(result => {
+                this.setState({ loading: false })
                 this.setState({ results: result })
 
                 if (typeof result != 'string') {
+                    
 
                     const convertedCoordinates = result.path.map(([lng, lat]) => ({
                         lat: lat,
@@ -116,7 +118,7 @@ class Test extends Component {
                     this.setState({isError: true})
                 }
                 this.setState({ loading: false })
-                this.setState({fetched: true})
+                this.setState({ fetched: true })
 
             })
             .catch(error => {
@@ -127,16 +129,17 @@ class Test extends Component {
     }
 
     render() {
+        console.log("results", this.state.results)
         return (
             <ThemeProvider theme={defaultTheme}>
                 <Grid
-                      container
-                      component = "main"
-                      // spacing={0}
-                      direction="row"
-                      // alignItems="center"
-                      justifyContent="center"
-                      sx={{ height: '1vh' }}>
+                    container
+                    component="main"
+                    // spacing={0}
+                    direction="row"
+                    // alignItems="center"
+                    justifyContent="center"
+                    sx={{ height: '1vh' }}>
                     <CssBaseline />
                     <Grid
                         // md={5}
@@ -153,7 +156,7 @@ class Test extends Component {
                             }}
                         >
                             <img
-                                src={require('./assets/logo.png')}
+                                src={require('../assets/logo.png')}
                                 style={{
                                     width: 135, height: 75, alignSelf: 'center',
                                     marginTop: '10px', marginLeft: '28%'
@@ -176,7 +179,7 @@ class Test extends Component {
                                     }}
                                 >
                                     <Grid item xs={1}>
-                                        <Brightness1Outlined sx={{ color: '#1976d2', width:18, height:18, marginTop: '25px', marginLeft: '2px'}}/>
+                                        <Brightness1Outlined sx={{ color: '#1976d2', width: 18, height: 18, marginTop: '25px', marginLeft: '2px' }} />
                                     </Grid>
                                     <Grid item xs={11}>
                                         <AutoComplete
@@ -195,7 +198,7 @@ class Test extends Component {
                                     }}
                                 >
                                     <Grid item xs={1} justify="flex-end" alignItems="center">
-                                        <LocationOn sx={{ color: '#1976d2', width:25, height:35, marginTop: '20px', marginRight: '-2px'}}/>
+                                        <LocationOn sx={{ color: '#1976d2', width: 25, height: 35, marginTop: '20px', marginRight: '-2px' }} />
                                     </Grid>
                                     <Grid item xs={11}>
                                         <AutoComplete
@@ -228,7 +231,7 @@ class Test extends Component {
                                             type="button"
                                             fullWidth
                                             variant={this.state.elevation === 0 ? 'contained' : 'outlined'}
-                                            sx={{ borderRadius: '5px 0px 0px 5px', height: 40}}
+                                            sx={{ borderRadius: '5px 0px 0px 5px', height: 40 }}
                                             size='small'
                                             onClick={() => {
                                                 this.setState({ elevation: 0 })
@@ -264,19 +267,19 @@ class Test extends Component {
                                                 this.setState({ mode: 0 })
                                             }}
                                         >
-                                            <DirectionsBike/>
+                                            <DirectionsBike />
                                         </Button>
                                         <Button
                                             type="button"
                                             fullWidth
                                             variant={this.state.mode === 1 ? 'contained' : 'outlined'}
-                                            sx={{ mt: 3, mb: 2, borderRadius: '0px 5px 5px 0px', height: 40}}
+                                            sx={{ mt: 3, mb: 2, borderRadius: '0px 5px 5px 0px', height: 40 }}
                                             size='small'
                                             onClick={() => {
                                                 this.setState({ mode: 1 })
                                             }}
                                         >
-                                            <DirectionsWalk/>
+                                            <DirectionsWalk />
                                         </Button>
                                     </Grid>
                                     <Typography
@@ -306,32 +309,33 @@ class Test extends Component {
                                         {this.state.percent}%
                                     </Typography>
                                     <Button
-                                        disabled= {this.state.source == '' || this.state.destination == '' ? true : false}
+                                        disabled={this.state.source == '' || this.state.destination == '' ? true : false}
                                         type="button"
                                         fullWidth
                                         variant="contained"
                                         size='large'
-                                        sx={{ mt: 5, mb: 2, borderRadius: 1, height: 40}}
+                                        sx={{ mt: 5, mb: 2, borderRadius: 1, height: 40 }}
                                         onClick={async (event) => {
                                             await this.handleSubmit(event)
                                         }}
                                     >
                                         Find Path
                                     </Button>
-                                    {/*<Button*/}
-                                    {/*    type="button"*/}
-                                    {/*    fullWidth*/}
-                                    {/*    variant="contained"*/}
-                                    {/*    size='large'*/}
-                                    {/*    sx={{ borderRadius: 1, height: 40, mb: 2,  */}
-                                    {/*        width: '50%', justifyContent:'center', ml: 12,*/}
-                                    {/*    }}*/}
-                                    {/*    onClick={(event) => {*/}
-                                    {/*        this.handleReset(event)*/}
-                                    {/*    }}*/}
-                                    {/*>*/}
-                                    {/*    Reset*/}
-                                    {/*</Button>*/}
+                                    {/* <Button
+                                        type="button"
+                                        fullWidth
+                                        variant="contained"
+                                        size='large'
+                                        sx={{
+                                            borderRadius: 1, height: 40, mb: 2,
+                                            width: '50%', justifyContent: 'center', ml: 12,
+                                        }}
+                                        onClick={(event) => {
+                                            this.handleReset(event)
+                                        }}
+                                    >
+                                        Reset
+                                    </Button> */}
                                 </Grid>
                                 <Grid>
                                     {this.state.loading === true ?
@@ -348,7 +352,7 @@ class Test extends Component {
                                             </Box>
                                         </Grid>
                                         :
-                                        this.state.fetched &&
+                                        this.state.results != '' &&
                                         <Grid height={100}>
                                             <Box sx={{ border: 2, borderColor: '#1976d2' }}>
                                                 <Typography sx={{ marginLeft: 10, fontSize: 18 }}>
@@ -358,7 +362,7 @@ class Test extends Component {
                                                     Total Distance: {(this.state.results.distance).toFixed(2)} km
                                                 </Typography>
                                                 <Typography sx={{ marginLeft: 10, fontSize: 18 }}>
-                                                    Elevation Variance : {this.state.results.elevation[1] -this.state.results.elevation[0]} m
+                                                    Elevation Variance : {this.state.results.elevation[1] - this.state.results.elevation[0]} m
                                                 </Typography>
                                             </Box>
                                         </Grid>
@@ -369,8 +373,8 @@ class Test extends Component {
                     </Grid>
                     <Grid item xs={7}>
                         <Map
-                        path={this.state.path}
-                    />
+                            path={this.state.path}
+                        />
                     </Grid>
                 </Grid>
                 <Grid>
@@ -381,4 +385,4 @@ class Test extends Component {
     }
 }
 
-export default Test;
+export default HomeScreen;

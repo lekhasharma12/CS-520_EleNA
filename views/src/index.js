@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import Test from './Test';
+import App from './App';
 
 const GOOGLE_MAPS_API_KEY = 'AIzaSyB4k2WLIJibVJ8ZmDTHtalCRVcDbfkPepM';
 
@@ -30,7 +30,7 @@ if (typeof window !== 'undefined') {
 }
 root.render(
   <React.StrictMode>
-    <Test/>
+    <App/>
   </React.StrictMode>
 );
 
