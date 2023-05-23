@@ -15,17 +15,17 @@ Libraries used
 **Pre-requisites**
 
 Cloning the repo
-
+```sh
 git clone https://github.com/lekhasharma12/CS-520_EleNA
-
+```
 **Installations:**
-
+```sh
 python3 -m pip install -r requirements.txt
-
+```
 All the dependent libraries are included in the requirements.txt
-
+```sh
 npm install
-
+```
 **Run the backend flask server**
 
 Change directory to the CS-520_EleNA project folder.
